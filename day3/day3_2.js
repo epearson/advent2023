@@ -17,6 +17,7 @@ async function processLineByLine(file) {
     let parts = [];
     let touchMap = {};
     let lineArray = [];
+    let gearMap = {};
 
     for await (const line of rl) {
       // Each line in input.txt will be successively available here as `line`.
@@ -30,17 +31,22 @@ async function processLineByLine(file) {
 
       //console.log(parts);
 
-      let symbols = Array.from(line.matchAll(/[^0-9\.]/gi));
+      let symbols = Array.from(line.matchAll(/\*/gi));
 
       for (let symbol of symbols) {
-        touchMap[(symbol.index + 1) + ',' + yIndex] = symbol[0];
-        touchMap[(symbol.index - 1) + ',' + yIndex] = symbol[0];
-        touchMap[(symbol.index + 1) + ',' + (yIndex + 1)] = symbol[0];
-        touchMap[(symbol.index - 1) + ',' + (yIndex - 1)] = symbol[0];
-        touchMap[(symbol.index + 1) + ',' + (yIndex - 1)] = symbol[0];
-        touchMap[(symbol.index - 1) + ',' + (yIndex + 1)] = symbol[0];
-        touchMap[symbol.index + ',' + (yIndex + 1)] = symbol[0];
-        touchMap[symbol.index + ',' + (yIndex - 1)] = symbol[0];
+        let coord = symbol.index + ',' + yIndex;
+        console.log('Coord: ' + coord);
+
+        touchMap[(symbol.index + 1) + ',' + yIndex] = coord;
+        touchMap[(symbol.index - 1) + ',' + yIndex] = coord;
+        touchMap[(symbol.index + 1) + ',' + (yIndex + 1)] = coord;
+        touchMap[(symbol.index - 1) + ',' + (yIndex - 1)] = coord;
+        touchMap[(symbol.index + 1) + ',' + (yIndex - 1)] = coord;
+        touchMap[(symbol.index - 1) + ',' + (yIndex + 1)] = coord;
+        touchMap[symbol.index + ',' + (yIndex + 1)] = coord;
+        touchMap[symbol.index + ',' + (yIndex - 1)] = coord;
+        
+        gearMap[coord] = [];
       }
 
       //console.log(symbols);
@@ -51,7 +57,7 @@ async function processLineByLine(file) {
 
     for (let i = 0; i < lineArray.length; i++) {
         let line = lineArray[i];
-        //console.log(line);
+        console.log(line);
 
         let numbers = Array.from(line.matchAll(/[0-9]/gi));
 
@@ -59,19 +65,22 @@ async function processLineByLine(file) {
       let prevNumIsTouching = false;
       let numberStr = '';
       let isTouching = false;
-      let isGear = false;
-      let starCount = 0;
+      let letLastGearCoord = null;
+      
 
       for (let j = 0; j < numbers.length; j++) {
         let number = numbers[j];
-        //console.log(number);
+        console.log(number);
+        let xyIndex = number.index + ',' + i;
+        
 
         if (prevNumIndex + 1 == number.index) {
             numberStr = numberStr + number;
         } else {
             // if a new number and the last was touching, add to parts
-            if (isTouching && starCount == 2) {
-                //console.log('Adding to parts: ' + numberStr);
+            if (isTouching) {
+                console.log('Adding to parts: ' + numberStr);
+                gearMap[letLastGearCoord].push(parseInt(numberStr));
                 parts.push(parseInt(numberStr));
             }
 
@@ -83,39 +92,42 @@ async function processLineByLine(file) {
 
         //console.log('Number String: ' + numberStr);
 
-        //if (!prevNumIsTouching) {
-            let xyIndex = number.index + ',' + i;
-
-            let symbol = touchMap[xyIndex];
-            isTouching = symbol ? true : false;
+        if (!prevNumIsTouching) {
+            
+          
+            isTouching = touchMap[xyIndex] ? true : false;
             prevNumIsTouching = isTouching;
 
-            if (symbol == '*') {
-                starCount = starCount + 1;
+
+
+            if (isTouching) {
+              letLastGearCoord = touchMap[xyIndex];  
             }
-
-            /*if (isTouching) {
-                
-            }*/
-        //} else {
+        } else {
             //prevNumIsTouching = false; // reset
-        //}
+        }
 
-        //console.log(isTouching);
+        console.log(isTouching);
 
         prevNumIndex = number.index;
 
         // if last, and touching, add to parts
-        if (j == numbers.length - 1 && isTouching && starCount == 2) {
+        if (j == numbers.length - 1 && isTouching) {
+          gearMap[letLastGearCoord].push(parseInt(numberStr));
             parts.push(parseInt(numberStr));
         }
       }
     }
 
     console.log(parts);
+    console.log(gearMap);
     //console.log(touchMap);
-    total = parts.reduce((x,y) => x + y);
+    total = Object.values(gearMap).reduce(
+      (acc, curr) => curr.length == 2 ? acc + curr[0] * curr[1] : acc,
+      0,
+    );
+
     console.log(total);
   }
   
-  processLineByLine('sample-3-1.txt');
+  processLineByLine('input-3-1.txt');
