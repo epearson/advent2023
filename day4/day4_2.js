@@ -1,22 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
 
-/*function countCards(cards, index, total) {
-    const numMatch = cards[index];
-
-    if (numMatch > 0) {
-        for (let i = 0; i < numMatch; i++) {
-            let newIndex = index + i + 1;
-
-            if (newIndex < cards.length) {
-                countCards(cards, index, total);
-            }
-        }
-    }
-
-    return total + 1;
-}*/
-
 async function processLineByLine(file) {
     const fileStream = fs.createReadStream(file);
     var total = 0;
@@ -55,8 +39,6 @@ async function processLineByLine(file) {
         });
 
     }
-
-    //total = countCards(cards, 0, 0);
 
     for (let i = 0; i < cards.length; i++) {
         let card = cards[i];
