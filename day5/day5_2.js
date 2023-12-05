@@ -6,13 +6,15 @@ function doMap(seed, mapper) {
 
     for (let range of mapper) {
         if (seed >= range[1] && seed <= range[1] + range[2]) {
-            console.log(range);
+            //console.log(range);
 
             mValue = range[0] + (seed - range[1]);
 
             break;
         }
     }
+
+    //console.log('mValue: ' + mValue);
 
     return mValue;
 }
@@ -77,22 +79,29 @@ async function processLineByLine(file) {
 
     let lowLoc = null;
 
-    for (let i = 0; i < seedMap.seeds.length; i++) {
-        const seed = seedMap.seeds[i];
-        console.log('Seed: ' + seed);
+    for (let i = 0; i < seedMap.seeds.length; i+=2) {
+        const seedStart = seedMap.seeds[i];
+        const seedLength = seedMap.seeds[i + 1];
 
-        let mValue = doMap(doMap(doMap(doMap(doMap(doMap(doMap(seed, sts), stf), ftw), wtl), ltt), tth), htl);
+        console.log('Seed start: ' + seedStart + ', length: ' + seedLength);
 
-        console.log(mValue);
+        for (let seed = seedStart; seed < (seedStart + seedLength); seed++) {
 
-        if (lowLoc == null) {
-            lowLoc = mValue;
-        } else if (mValue < lowLoc) {
-            lowLoc = mValue;
+            //console.log('Seed: ' + seed);
+
+            let mValue = doMap(doMap(doMap(doMap(doMap(doMap(doMap(seed, sts), stf), ftw), wtl), ltt), tth), htl);
+
+            //console.log('location: ' + mValue);
+
+            if (lowLoc == null) {
+                lowLoc = mValue;
+            } else if (mValue < lowLoc) {
+                lowLoc = mValue;
+            }
         }
     }
-    
+
     console.log(lowLoc);
   }
   
-  processLineByLine('sample.txt');
+  processLineByLine('input.txt');
