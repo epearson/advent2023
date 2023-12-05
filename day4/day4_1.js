@@ -17,15 +17,11 @@ async function processLineByLine(file) {
       console.log(`Line from file: ${line}`);
     
       let p1 = line.substring(line.indexOf(':') + 1);
-      //console.log(p1);
 
       let p2 = p1.split('|');
 
       let winningSet = new Set(p2[0].split(/\s+/g).filter(e => e).map(Number));
       let scratchSet = new Set(p2[1].split(/\s+/g).filter(e => e).map(Number));
-
-      //console.log(winningSet);
-      //console.log(scratchSet);
 
       let matches = [...winningSet].filter(x => scratchSet.has(x));
       console.log(matches);
