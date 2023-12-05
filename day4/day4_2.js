@@ -56,9 +56,32 @@ async function processLineByLine(file) {
 
     }
 
-    total = countCards(cards, 0, 0);
+    //total = countCards(cards, 0, 0);
+
+    for (let i = 0; i < cards.length; i++) {
+        let card = cards[i];
+
+        if (card.numMatches > 0) {
+            for (let j = 1; j <= card.numMatches; j++) {
+                if (i + j < cards.length) {
+                    cards[i + j].cardCount = cards[i + j].cardCount + card.cardCount;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        //console.log(cards);
+    }
+
+    console.log(cards);
+
+    total = cards.reduce(
+        (acc, curr) => acc + curr.cardCount,
+        0,
+      );
 
     console.log(total);
   }
   
-  processLineByLine('sample-4-1.txt');
+  processLineByLine('input.txt');
