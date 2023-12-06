@@ -3,14 +3,13 @@ const readline = require('readline');
 
 function doMap(seed, mapper) {
     let mValue = seed;
+    //console.log(mapper.name);
 
-    for (let range of mapper) {
-        if (seed >= range[1] && seed <= range[1] + range[2]) {
+    for (let range of mapper.ranges) {
+        if (seed >= range[1] && seed < range[1] + range[2]) {
             //console.log(range);
 
             mValue = range[0] + (seed - range[1]);
-
-            break;
         }
     }
 
@@ -52,6 +51,7 @@ async function processLineByLine(file) {
                 seedMap.seeds = p1[1].trim().split(/\s+/).map(Number);
             } else {
                 seedMap.mappings[currentMapName] = {};
+                seedMap.mappings[currentMapName].name = currentMapName;
                 seedMap.mappings[currentMapName].ranges = [];
                 seedMap.mappings[currentMapName].converted = {};
             }
@@ -69,13 +69,13 @@ async function processLineByLine(file) {
       lineIndex++;
     }
 
-    let sts = seedMap.mappings['seed-to-soil map'].ranges;
-    let stf = seedMap.mappings['soil-to-fertilizer map'].ranges;
-    let ftw = seedMap.mappings['fertilizer-to-water map'].ranges;
-    let wtl = seedMap.mappings['water-to-light map'].ranges;
-    let ltt = seedMap.mappings['light-to-temperature map'].ranges;
-    let tth = seedMap.mappings['temperature-to-humidity map'].ranges;
-    let htl = seedMap.mappings['humidity-to-location map'].ranges;
+    let sts = seedMap.mappings['seed-to-soil map'];
+    let stf = seedMap.mappings['soil-to-fertilizer map'];
+    let ftw = seedMap.mappings['fertilizer-to-water map'];
+    let wtl = seedMap.mappings['water-to-light map'];
+    let ltt = seedMap.mappings['light-to-temperature map'];
+    let tth = seedMap.mappings['temperature-to-humidity map'];
+    let htl = seedMap.mappings['humidity-to-location map'];
 
     let lowLoc = null;
 
@@ -83,7 +83,7 @@ async function processLineByLine(file) {
         const seedStart = seedMap.seeds[i];
         const seedLength = seedMap.seeds[i + 1];
 
-        console.log('Seed start: ' + seedStart + ', length: ' + seedLength);
+        console.log('\n\nSeed start: ' + seedStart + ', length: ' + seedLength + '\n\n');
 
         for (let seed = seedStart; seed < (seedStart + seedLength); seed++) {
 
