@@ -30,10 +30,10 @@ async function processLineByLine(file) {
       console.log(p1[1]);
 
       if(p1[0].trim() == 'Time') {
-        times = parseInt(p1[1].replace(/\s/+, ''));
+        times = parseInt(p1[1].replace(/\s+/g, ''));
         console.log(times);
       } else {
-        distances = parseInt(p1[1].replace(/\s+/, ''));
+        distances = parseInt(p1[1].replace(/\s+/g, ''));
         console.log(distances);
       }
 
@@ -41,7 +41,7 @@ async function processLineByLine(file) {
 
     let total = 1;
 
-    for (let i = 0; i < times.length; i++) {
+    //for (let i = 0; i < times.length; i++) {
         let tmax = times;
         let dmin = distances;
         console.log(`time ${tmax}, distance ${dmin}`);
@@ -57,9 +57,9 @@ async function processLineByLine(file) {
 
         total = total * (end - start + 1);
 
-    }
+    //}
 
     console.log(total);
   }
   
-  processLineByLine('sample.txt');
+  processLineByLine('input.txt');
