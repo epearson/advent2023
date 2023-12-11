@@ -16,7 +16,7 @@ async function processLineByLine(file) {
   
     for await (const line of rl) {
       // Each line in input.txt will be successively available here as `line`.
-      console.log(`Line from file: ${line}`);
+      //console.log(`Line from file: ${line}`);
     
       let p1 = line.substring(line.indexOf(':') + 1);
 
@@ -26,7 +26,7 @@ async function processLineByLine(file) {
       let scratchSet = new Set(p2[1].split(/\s+/g).filter(e => e).map(Number));
 
       let matches = [...winningSet].filter(x => scratchSet.has(x));
-      console.log('# Matches: ' + matches.length);
+      //console.log('# Matches: ' + matches.length);
 
       cards.push({
             numMatches: matches.length,
@@ -49,7 +49,7 @@ async function processLineByLine(file) {
         }
     }
 
-    console.log(cards);
+    //console.log(cards);
 
     total = cards.reduce(
         (acc, curr) => acc + curr.cardCount,
@@ -57,6 +57,8 @@ async function processLineByLine(file) {
       );
 
     console.log(total);
+    console.log(Date.now() - startTime);
   }
   
+  let startTime = Date.now();
   processLineByLine('input.txt');

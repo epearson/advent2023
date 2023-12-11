@@ -88,8 +88,10 @@ async function processLineByLine(file) {
     }
 
     console.log(total);
+    console.log(Date.now() - startTime);
   }
   
+  let startTime = Date.now();
   processLineByLine('input.txt');
 
   //day1: 54390

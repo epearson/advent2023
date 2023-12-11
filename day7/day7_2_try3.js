@@ -136,7 +136,10 @@ async function processLineByLine(file) {
 
     console.log(total);
     //fs.writeFileSync('./data.json', JSON.stringify(filtered, null, 2) , 'utf-8');
+    console.log('Time: ' + (Date.now() - startTime));
     
   }
   
+  let startTime = Date.now();
   processLineByLine('input.txt');
+  
